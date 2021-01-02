@@ -17,7 +17,7 @@ import ViewProductAreafrom from '../../Components/ViewProductArea';
 import { IconButton, Badge } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-const HomeScreen = ( navigation ) =>{
+const HomeScreen = ({ navigation }) =>{
 
   const { dataState, dataDispatch } = React.useContext(DataContext);
   console.log(dataState);
@@ -65,7 +65,7 @@ const HomeScreen = ( navigation ) =>{
 
   useEffect(() => {
       filterProductList();
-  },[dataState.PRODUCT_TYPE]);
+  },[dataState.PRODUCT_TYPE, dataState.CART_LIST]);
 
 
   function filterProductList() {
@@ -120,7 +120,7 @@ const HomeScreen = ( navigation ) =>{
             <ViewProductAreafrom /> 
           </View>
           <View style={styles.cartContainer}>
-            <TouchableOpacity style={styles.cart} onPress={() => console.log('Pressed')}>
+            <TouchableOpacity style={styles.cart} onPress={() => navigation.navigate('CartScreen')}>
               <Icon name="cart" color={'#000'} size={40} />
               <Badge style={styles.badge} size={30}>{dataState.CART_LIST.length}</Badge>
             </TouchableOpacity>

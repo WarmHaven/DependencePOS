@@ -9,6 +9,7 @@ const HomeStack = createStackNavigator();
 
 import HomeScreen from './Screens/HomeScreen';
 import AddProdScreen from './Screens/AddProdScreen';
+import CartScreen from './Screens/CartScreen';
 import SettingScreen from './Screens/SettingScreen';
 
 
@@ -35,8 +36,9 @@ const HomeStackScreen = ({navigation}) => (
         },
         headerShown: false,
     }}>
-        <HomeStack.Screen name="HomeScreen" component={HomeScreen} options={{title:'Home',}}  />
-        <HomeStack.Screen name="AddProdScreen" component={AddProdScreen} options={{title:'Add Product',}} badge={'3'}/>
+        <HomeStack.Screen name="HomeScreen" component={HomeScreen} options={{title:'Home',}} />
+        <HomeStack.Screen name="AddProdScreen" component={AddProdScreen} options={{title:'Add Product',}} />
+        <HomeStack.Screen name="CartScreen" component={CartScreen} options={{title:'Order List',}} />
 
 </HomeStack.Navigator>
 );

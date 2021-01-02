@@ -32,6 +32,7 @@ import {
   DarkTheme as NavigationDarkTheme
 } from '@react-navigation/native';
 
+import Toast from 'react-native-toast-message';
 import RootStackScreen from './src/Navigation/RootStackScreen';
 import MainTabScreen from './src/Navigation/MainTabScreen';
 
@@ -152,6 +153,7 @@ const App: () => React$Node = () => {
         :
           <RootStackScreen/>
         }
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </NavigationContainer>
       </DataContext.Provider>
       </InfoContext.Provider>

@@ -11,20 +11,45 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import Toast from 'react-native-toast-message';
 
 import { AuthContext, InfoContext, DataContext } from './Context';
-// import DetailOneArea from './DetailOneArea';
-// import DetailTwoArea from './DetailTwoArea';
 
-
-// const { setDetailOne } = React.useContext(AuthContext);
 
 const ProdButton = ({item, time}) => {
 	const [count, setCount] = React.useState(0);
+	const { dataState, dataDispatch } = React.useContext(DataContext);
+
+	function itemInfo(item, count) {
+		var itemList = { id: item.ID, name: item.NAME, price: item.PRICE, count: count, totalPrice: item.PRICE*count };
+		return itemList;
+	}
+
+	function ProdOnPress(item, count) {
+		console.log(itemInfo(item,count));
+		if (count==0) {
+			Toast.show({
+				type: 'error',
+				text1: 'Add Product',
+				text2: 'Product\'s count can not \'0\'!',
+				visibilityTime: 1000,
+		    });
+		}else{
+			dataDispatch({ type: 'ADD_CART_LIST', cartList: itemInfo(item,count) });
+			setCount(0);
+
+			Toast.show({
+		      text1: 'Add Product',
+		      text2: 'Success',
+		      visibilityTime: 1000,
+		    });
+		}
+	}
+
 	return(
 			<Animatable.View key={item.ID} animation="fadeInLeft" duration={time}>
 				<View style={styles.btnContainer}>
-					<TouchableOpacity  onPress={ () => [console.log(item.ID, item.NAME, item.PRICE, count), setCount(0)] }>
+					<TouchableOpacity  onPress={ () => ProdOnPress(item, count)}>
 			            <View style={[styles.homeButton, {backgroundColor: '#9C6644'}]}>
 
 			                <Text style={styles.buttonTextStyle}>
@@ -67,17 +92,12 @@ const ViewProductArea = (props) => {
 	const { dataState, dataDispatch } = React.useContext(DataContext);
 	const [state, setState] = React.useState({
 		data: null,
-
 	});
 
 	useEffect(() => {
 	  	
 	},[dataState.PRODUCT_LIST]);
 
-	
-	
-
-	// console.log(state.data);
 
 	if (dataState.PRODUCT_LIST == null) {
 		return (
