@@ -128,7 +128,7 @@ const App: () => React$Node = () => {
       } catch(e) {
         console.log(e);
       }
-      console.log('user token: ', userToken);
+      // console.log('user token: ', userToken);
       loginDispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
     }, 1000);
   }, []);
