@@ -96,6 +96,7 @@ const SettingScreen = () =>{
                     color: '#fff'
                 }]}>Sign Out</Text>
             </TouchableOpacity>
+            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>v1.0.0 beta001</Text>
           </View>
       
 

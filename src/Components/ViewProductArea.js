@@ -21,12 +21,11 @@ const ProdButton = ({item, time}) => {
 	const { dataState, dataDispatch } = React.useContext(DataContext);
 
 	function itemInfo(item, count) {
-		var itemList = { id: item.ID, name: item.NAME, price: item.PRICE, count: count, totalPrice: item.PRICE*count };
+		var itemList = { id: item.ID, name: item.NAME, price: item.PRICE, count: count, totalPrice: item.PRICE*count, remark: [], plus:'', minus: '' };
 		return itemList;
 	}
 
 	function ProdOnPress(item, count) {
-		console.log(itemInfo(item,count));
 		if (count==0) {
 			Toast.show({
 				type: 'error',
@@ -39,7 +38,7 @@ const ProdButton = ({item, time}) => {
 			setCount(0);
 
 			Toast.show({
-		      text1: 'Add Product',
+		      text1: 'Add Product - '+item.NAME+' ('+count+')',
 		      text2: 'Success',
 		      visibilityTime: 1000,
 		    });
@@ -179,6 +178,7 @@ var boxW = 170;
 
 var hMargin = 20;
 var wMargin = (SCREEN_WIDTH - cols * boxW) / (cols + 1);
+wMargin=12;
 
 
 const styles = StyleSheet.create({
