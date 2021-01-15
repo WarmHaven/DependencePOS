@@ -11,7 +11,7 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthContext, InfoContext, DataContext } from '../../Components/Context';
+import { DataContext } from '../../Components/Context';
 import MenuScroll from '../../Components/MenuScroll';
 import ViewProductAreafrom from '../../Components/ViewProductArea';
 import { IconButton, Badge } from 'react-native-paper';
@@ -19,8 +19,8 @@ import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 const HomeScreen = ({ navigation }) =>{
 
-  const { dataState, dataDispatch } = React.useContext(DataContext);
-  console.log(dataState);
+  const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
+  // console.log(dataState);
 
 
   const [state, setState] = React.useState({
@@ -34,32 +34,15 @@ const HomeScreen = ({ navigation }) =>{
   },[]);
 
   useEffect(() => {
-      setTimeout(async() => {
-        // setIsLoading(false);
-        let userToken, userName;
-        userToken = null;
-        userName = null;
-        if (state.userToken==null) {
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-            userName = await AsyncStorage.getItem('userName');
-
-            setState({
-                ...state,
-                userToken: userToken,
-                userName: userName,
-            });
-          } catch(e) {
-            console.log(e);
-          }
-        }else{
-          getAllProduct();
-        }
-        
-        // console.log('user token: ', userToken);
-        // dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-      }, 500);
-
+      if (state.userToken==null) {
+        setState({
+            ...state,
+            userToken: loginState.userToken,
+            userName: loginState.userName,
+        });
+      }else{
+        getAllProduct();
+      }
       
   },[state.userToken]);
 

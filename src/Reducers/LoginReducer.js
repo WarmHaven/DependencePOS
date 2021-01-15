@@ -15,6 +15,7 @@ export const loginReducer = (prevState, action) => {
         return {
           ...prevState,
           userToken: action.token,
+          userName: action.id,
           isLoading: false,
         };
       case 'LOGIN': 

@@ -13,14 +13,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContext, InfoContext, DataContext } from './Context';
+import { DataContext } from './Context';
 
 import Popover, { PopoverMode, PopoverPlacement } from 'react-native-popover-view';
 import { Kohana, Isao } from 'react-native-textinput-effects';
 import RemarkArea from './RemarkArea';
 
 const CartListScroll = ({auth}) =>{
-  const { dataState, dataDispatch } = React.useContext(DataContext);
+  const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
   const [count, setCount] = useState(dataState.CART_COUNT);
   const [totalPrice, setTotalPrice] = useState(dataState.CART_PRICE);
   const [plus, setPlus] = useState('0');
@@ -32,37 +32,45 @@ const CartListScroll = ({auth}) =>{
   });
 
   useEffect(() => {
-      setTimeout(async() => {
-        // setIsLoading(false);
-        let userToken, userName;
-        userToken = null;
-        userName = null;
-        if (state.userToken==null) {
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-            userName = await AsyncStorage.getItem('userName');
-
-            setState({
-                ...state,
-                userToken: userToken,
-                userName: userName,
-            });
-          } catch(e) {
-            console.log(e);
-          }
-          // getTotal(dataState.CART_LIST);
-        }else{
-          // getTotal(dataState.CART_LIST);
-        }
-        // console.log('user token: ', userToken);
-        // dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-      }, 500);
-    
+    if (state.userToken==null) {
+        setState({
+            ...state,
+            userToken: loginState.userToken,
+            userName: loginState.userName,
+        });
+    }else{
+      getRemarkType();
+    }
     setCount(dataState.CART_COUNT);
     setTotalPrice(dataState.CART_PRICE);
       
   },[state.userToken, dataState.CART_LIST, dataState.CART_COUNT, dataState.CART_PRICE]);
 
+  async function getRemarkType(){
+    if(dataState.REMARK_TYPE_LIST == null){
+      fetch('http://127.0.0.1/Dependency/index.php', {
+          method: 'POST',
+          headers: {
+              // 'Accept': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 
+            "METHOD_NAME=getRemarkType"+
+            "&apiKey="+state.userToken         
+
+      }).then((response) => response.text())
+            .then( async (jsonData) => {
+                // console.warn("getRemarkType: "+jsonData);
+                var allData = JSON.parse(jsonData);
+                dataDispatch({type:'SET_REMARK_TYPE_LIST', remarkList: allData.result})
+
+
+            }).catch((error) => {
+              console.log(error);
+              // alert("網路異常，請重新整理！");
+            })
+    }
+  }
 
   // async function AddOrder(){
   //   if (state.userToken != null) {  

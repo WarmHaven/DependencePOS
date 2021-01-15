@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContext, InfoContext, DataContext } from './Context';
+import { DataContext } from './Context';
 
 const MenuScroll = ({auth}) =>{
-  const { dataState, dataDispatch } = React.useContext(DataContext);
+  const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
 
   const [selectedId, setSelectedId] = useState('0');
   const [state, setState] = React.useState({
@@ -25,32 +25,16 @@ const MenuScroll = ({auth}) =>{
   });
 
   useEffect(() => {
-      setTimeout(async() => {
-        // setIsLoading(false);
-        let userToken, userName;
-        userToken = null;
-        userName = null;
-        if (state.userToken==null) {
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-            userName = await AsyncStorage.getItem('userName');
-
-            setState({
-                ...state,
-                userToken: userToken,
-                userName: userName,
-            });
-          } catch(e) {
-            console.log(e);
-          }
-        }else{
+      if (state.userToken==null) {
+        setState({
+            ...state,
+            userToken: loginState.userToken,
+            userName: loginState.userName,
+        });
+      }else{
         
-          getProductType();
-        }
-        // console.log('user token: ', userToken);
-        // dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-      }, 500);
-
+        getProductType();
+      }
       
   },[state.userToken]);
 

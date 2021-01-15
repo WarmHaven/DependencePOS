@@ -16,7 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import { useTheme } from 'react-native-paper';
 
-import { InfoContext } from '../../Components/Context';
+import { FunContext } from '../../Components/Context';
 
 // import Users from '../model/users';
 
@@ -33,7 +33,7 @@ const SignInScreen = ({navigation}) => {
 
     const { colors } = useTheme();
 
-    const { signIn } = React.useContext(InfoContext);
+    const { signIn } = React.useContext(FunContext);
 
     const textInputChange = (val) => {
         if( val.trim().length >= 4 ) {

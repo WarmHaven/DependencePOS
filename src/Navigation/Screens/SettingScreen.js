@@ -15,56 +15,20 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthContext, InfoContext, DataContext } from '../../Components/Context';
+import { FunContext, DataContext } from '../../Components/Context';
 import MenuScroll from '../../Components/MenuScroll';
 import ViewProductAreafrom from '../../Components/ViewProductArea';
 
 const SettingScreen = () =>{
 
-  const { dataState, dataDispatch } = React.useContext(DataContext);
-  const { signOut, toggleTheme } = React.useContext(InfoContext);
+  const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
+  const { signOut, toggleTheme } = React.useContext(FunContext);
 
 
   const [state, setState] = React.useState({
-      userName: null,
-      userToken: null,
+      userName: loginState.userName,
+      userToken: loginState.userToken,
   });
-
-  useEffect(() => {
-      
-  },[]);
-
-  useEffect(() => {
-      setTimeout(async() => {
-        // setIsLoading(false);
-        let userToken, userName;
-        userToken = null;
-        userName = null;
-        if (state.userToken==null) {
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-            userName = await AsyncStorage.getItem('userName');
-
-            setState({
-                ...state,
-                userToken: userToken,
-                userName: userName,
-            });
-          } catch(e) {
-            console.log(e);
-          }
-        }else{
-
-        }
-        
-        // console.log('user token: ', userToken);
-        // dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-      }, 500);
-
-      
-  },[state.userToken]);
-
-
 
   // <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
 	return(
@@ -96,7 +60,7 @@ const SettingScreen = () =>{
                     color: '#fff'
                 }]}>Sign Out</Text>
             </TouchableOpacity>
-            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>v1.0.0 beta001</Text>
+            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.1</Text>
           </View>
       
 

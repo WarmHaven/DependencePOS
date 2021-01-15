@@ -13,13 +13,13 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Toast from 'react-native-toast-message';
 
-import { AuthContext, InfoContext, DataContext } from './Context';
+import { DataContext } from './Context';
 
 
 const ProdButton = ({item, time}) => {
-	const [count, setCount] = React.useState(0);
 	const { dataState, dataDispatch } = React.useContext(DataContext);
-
+	const [count, setCount] = React.useState(0);
+	
 	function itemInfo(item, count) {
 		var itemList = { id: item.ID, name: item.NAME, price: item.PRICE, count: count, totalPrice: item.PRICE*count, remark: [], plus:'', minus: '' };
 		return itemList;
@@ -86,8 +86,6 @@ const ProdButton = ({item, time}) => {
 
 
 const ViewProductArea = (props) => {
-
-	// const { loginState, loginDispatch } = React.useContext(InfoContext);
 	const { dataState, dataDispatch } = React.useContext(DataContext);
 	const [state, setState] = React.useState({
 		data: null,

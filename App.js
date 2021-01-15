@@ -38,7 +38,7 @@ import MainTabScreen from './src/Navigation/MainTabScreen';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthContext, InfoContext, DataContext, } from './src/Components/Context';
+import { AuthContext, InfoContext, FunContext, DataContext, } from './src/Components/Context';
 
 import { loginReducer, initialLoginState } from './src/Reducers/LoginReducer';
 import { dataReducer, initialDataState } from './src/Reducers/DataReducer';
@@ -79,7 +79,7 @@ const App: () => React$Node = () => {
   const [loginState, loginDispatch] = React.useReducer(loginReducer, initialLoginState);
   const [dataState, dataDispatch] = React.useReducer(dataReducer, initialDataState);
 
-  const infoContext = React.useMemo(() => ({
+  const funContext = React.useMemo(() => ({
 
     signIn: async(foundUser) => {
       // setUserToken('fgkj');
@@ -87,6 +87,7 @@ const App: () => React$Node = () => {
       // console.warn(foundUser);
       const userToken = String(foundUser.token);
       const userName = foundUser.result;
+      console.log(userName);
       
       try {
         await AsyncStorage.setItem('userToken', userToken);
@@ -120,16 +121,17 @@ const App: () => React$Node = () => {
 
   React.useEffect(() => {
     setTimeout(async() => {
-      // setIsLoading(false);
-      let userToken;
+      let userToken, userName;
       userToken = null;
+      userName = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
+        userName = await AsyncStorage.getItem('userName');
       } catch(e) {
         console.log(e);
       }
       // console.log('user token: ', userToken);
-      loginDispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
+      loginDispatch({ type: 'RETRIEVE_TOKEN', id: userName, token: userToken });
     }, 1000);
   }, []);
 
@@ -144,8 +146,8 @@ const App: () => React$Node = () => {
   }
   return (
       <PaperProvider theme={theme}>
-      <InfoContext.Provider value={infoContext}>
-      <DataContext.Provider value={{dataState, dataDispatch}}>
+      <FunContext.Provider value={funContext}>
+      <DataContext.Provider value={{dataState, dataDispatch, loginState, loginDispatch}}>
       <NavigationContainer theme={theme}>
         { loginState.userToken !== null ? (
           <MainTabScreen />
@@ -156,7 +158,7 @@ const App: () => React$Node = () => {
         <Toast ref={(ref) => Toast.setRef(ref)} />
       </NavigationContainer>
       </DataContext.Provider>
-      </InfoContext.Provider>
+      </FunContext.Provider>
       </PaperProvider>
   );
 };

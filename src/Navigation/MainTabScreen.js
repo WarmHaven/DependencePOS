@@ -15,7 +15,7 @@ import CartScreen from './Screens/CartScreen';
 import SettingScreen from './Screens/SettingScreen';
 
 
-import { AuthContext, InfoContext, DataContext } from '../Components/Context';
+import { DataContext } from '../Components/Context';
 const MainTabScreen = () => {
   	
   const { dataState, dataDispatch } = React.useContext(DataContext);

@@ -10,7 +10,7 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthContext, InfoContext, DataContext } from '../../Components/Context';
+import { DataContext } from '../../Components/Context';
 import MenuScroll from '../../Components/MenuScroll';
 import ViewProductAreafrom from '../../Components/ViewProductArea';
 

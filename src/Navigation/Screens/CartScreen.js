@@ -11,13 +11,12 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthContext, InfoContext, DataContext } from '../../Components/Context';
+import { DataContext } from '../../Components/Context';
 import CartListScroll from '../../Components/CartListScroll';
 
 const CartScreen = ({ navigation }) =>{
 
-  const { dataState, dataDispatch } = React.useContext(DataContext);
-
+  const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
 
   const [state, setState] = React.useState({
     userToken: null,
@@ -25,31 +24,15 @@ const CartScreen = ({ navigation }) =>{
   });
 
   useEffect(() => {
-      setTimeout(async() => {
-        let userToken, userName;
-        userToken = null;
-        userName = null;
-        if (state.userToken==null) {
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-            userName = await AsyncStorage.getItem('userName');
+      if (state.userToken==null) {
+        setState({
+            ...state,
+            userToken: loginState.userToken,
+            userName: loginState.userName,
+        });
+      }else{
 
-            setState({
-                ...state,
-                userToken: userToken,
-                userName: userName,
-            });
-          } catch(e) {
-            console.log(e);
-          }
-        }else{
-
-        }
-        
-        // console.log('user token: ', userToken);
-        // dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-      }, 500);
-
+      }
       
   },[state.userToken]);
 
@@ -83,7 +66,7 @@ const CartScreen = ({ navigation }) =>{
         <TouchableOpacity onPress={()=> Cancel()} style={[styles.btnCancel]}>
           <Text style={styles.title}>取消訂單</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{}} style={[styles.btnConfirm]}>
+        <TouchableOpacity onPress={()=> CreateOrder()} style={[styles.btnConfirm]}>
           <Text style={styles.title}>建立訂單</Text>
         </TouchableOpacity>
       </View>
