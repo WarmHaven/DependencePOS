@@ -2,12 +2,21 @@ import React, { useEffect } from 'react';
 
 
 export const initialDataState = {
+  //product
   PRODUCT_TYPE: null,
   PRODUCT_LIST: null,
   DEFAULT_PROD_LIST: [],
+
+  //cart
   CART_LIST: [],
-  CART_COUNT: 0,
-  CART_PRICE: 0,
+
+  //order
+  ORDER_COUNT: 0,
+  ORDER_PRICE: 0,
+  DISCOUNT_VALUE: 0,
+
+  //temp
+  DISCOUNT: '',
   REMARK_TYPE_LIST: null,
 };
 
@@ -56,7 +65,7 @@ export const dataReducer = (prevState, action) => {
         const found = prevState.CART_LIST.find(e => e.id==action.cartList.id);
         if (found!=undefined) {
           found.count=found.count+action.cartList.count;
-          found.totalPrice=found.count*found.price;
+          found.totalPrice=found.count*found.unitPrice;
 
           const old = prevState.CART_LIST.findIndex(e => e.id==action.cartList.id);
           prevState.CART_LIST.splice(old,1,found);
@@ -64,8 +73,8 @@ export const dataReducer = (prevState, action) => {
           var total = getTotal(prevState.CART_LIST)[0];
           return {
             ...prevState,
-            CART_COUNT: total.count,
-            CART_PRICE: total.price,
+            ORDER_COUNT: total.count,
+            ORDER_PRICE: total.price,
             // CART_LIST: [...prevState.CART_LIST.filter( id => id !== action.id), found],
           };
 
@@ -75,8 +84,8 @@ export const dataReducer = (prevState, action) => {
             ...prevState,
             // CART_LIST: [...prevState.CART_LIST.filter( id => id !== action.id), action.cartList],
             CART_LIST: [...prevState.CART_LIST, action.cartList],
-            CART_COUNT: total.count,
-            CART_PRICE: total.price,
+            ORDER_COUNT: total.count,
+            ORDER_PRICE: total.price,
           };  
         }
         break;
@@ -85,16 +94,16 @@ export const dataReducer = (prevState, action) => {
         return {
           ...prevState,
           CART_LIST: [...prevState.CART_LIST.filter((item) => item.id !== action.id)],
-          CART_COUNT: total.count,
-          CART_PRICE: total.price,
+          ORDER_COUNT: total.count,
+          ORDER_PRICE: total.price,
         };
         break;
       case 'REMOVE_ALL_CART_LIST': 
         return {
           ...prevState,
           CART_LIST: [...prevState.CART_LIST.slice(0,0)],
-          CART_COUNT: 0,
-          CART_PRICE: 0,
+          ORDER_COUNT: 0,
+          ORDER_PRICE: 0,
         };
         break;
       case 'SET_REMARK_TYPE_LIST': 
@@ -132,7 +141,7 @@ export const dataReducer = (prevState, action) => {
         var total = getTotal(prevState.CART_LIST)[0];
         return {
           ...prevState, 
-          CART_PRICE: total.price,         
+          ORDER_PRICE: total.price,         
         };
         break;
       case 'SET_REMARK_MINUS': 
@@ -146,11 +155,37 @@ export const dataReducer = (prevState, action) => {
         var total = getTotal(prevState.CART_LIST)[0];
         return {
           ...prevState,
-          CART_PRICE: total.price,
+          ORDER_PRICE: total.price,
         };
         break;
+      case 'RESET_DISCOUNT': 
 
+        return {
+          ...prevState,
+          DISCOUNT: '',
+          DISCOUNT_VALUE : 0,
+        };
+        break;
+      case 'SET_DISCOUNT': 
+        var discount = 0;
+        if (action.mode==1) {
+          
+          if (action.discount.length>1) {
+            discount = prevState.ORDER_PRICE*(100-action.discount)/100
+          }else if (action.discount.length==1) {
+            discount = prevState.ORDER_PRICE*(10-action.discount)/10
+          }
+        }else{
+          discount = action.discount;
+        }
+        if (action.discount.length==0) { discount = 0; }
 
+        return {
+          ...prevState,
+          DISCOUNT: action.discount,
+          DISCOUNT_VALUE : parseInt(discount),
+        };
+        break;
 
 
 

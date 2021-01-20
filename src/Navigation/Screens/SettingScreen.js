@@ -11,8 +11,7 @@ import {
     TouchableRipple,
     Switch
 } from 'react-native-paper';
-
-
+import { styles } from '../../style/css';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { FunContext, DataContext } from '../../Components/Context';
@@ -22,8 +21,10 @@ import ViewProductAreafrom from '../../Components/ViewProductArea';
 const SettingScreen = () =>{
 
   const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
-  const { signOut, toggleTheme } = React.useContext(FunContext);
+  const { signOut } = React.useContext(FunContext);
 
+  const paperTheme = useTheme();
+  const { myColor } = paperTheme;
 
   const [state, setState] = React.useState({
       userName: loginState.userName,
@@ -32,7 +33,7 @@ const SettingScreen = () =>{
 
   // <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
 	return(
-		<View style={[styles.container, ]}>
+		<View style={[styles.container, {backgroundColor: myColor.background} ]}>
 
           <View style={{}}>
               <Avatar.Image 
@@ -49,18 +50,16 @@ const SettingScreen = () =>{
           <View style={styles.button}>
             <TouchableOpacity
                 onPress={() => {signOut()}}
-                style={[styles.signIn, {
-                    backgroundColor: '#7F5539',
-                    borderColor: '#7F5539',
+                style={[styles.signIn, paperTheme.colors.card,{
+                    backgroundColor: myColor.button,
+                    borderColor: myColor.selected,
                     borderWidth: 1,
                     marginTop: 10
                 }]}
             >
-                <Text style={[styles.title, {
-                    color: '#fff'
-                }]}>Sign Out</Text>
+                <Text style={[styles.title, ]}>Sign Out</Text>
             </TouchableOpacity>
-            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.1</Text>
+            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.2</Text>
           </View>
       
 
@@ -70,66 +69,3 @@ const SettingScreen = () =>{
 };
 
 export default SettingScreen;
-
-
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    backgroundColor: '#DDB892',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    alignItems: 'center',
-    marginTop: 10,
-    width: '20%'
-  },
-  signIn: {
-      width: '100%',
-      height: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 10
-  },
-  title: {
-    fontSize: 20,
-    marginTop: 3,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-  },
-  row: {
-    // marginTop: 20,
-    flexDirection: 'row',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // alignSelf: 'center'
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: 'bold',
-    marginRight: 3,
-  },
-  drawerSection: {
-    marginTop: 15,
-  },
-  bottomDrawerSection: {
-      marginBottom: 15,
-      borderTopColor: '#f4f4f4',
-      borderTopWidth: 1
-  },
-  preference: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-
-});

@@ -120,8 +120,7 @@ const SignInScreen = ({navigation}) => {
                           signIn(allData);
                           
                         }else if(allData.code == -1){
-                          
-                          
+                          Alert.alert("ERROR", jsonData);
                         }else{
                           Alert.alert("ERROR", jsonData);
                         }

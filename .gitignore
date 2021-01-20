@@ -57,3 +57,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+Dependency/config.php
+Dependency/getProduct.php
+Dependency/test.php
+Dependency/PRODUCT.php

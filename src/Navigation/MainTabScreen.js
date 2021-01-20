@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
+import { useTheme, } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import HomeScreen from './Screens/HomeScreen';
 import AddProdScreen from './Screens/AddProdScreen';
@@ -16,13 +17,14 @@ import SettingScreen from './Screens/SettingScreen';
 
 
 import { DataContext } from '../Components/Context';
-const MainTabScreen = () => {
-  	
+const MainTabScreen = () => { 	
   const { dataState, dataDispatch } = React.useContext(DataContext);
+  const paperTheme = useTheme();
+  const { myColor } = paperTheme;
   return(  
     <Tab.Navigator
       initialRouteName="Home"
-      activeColor="#7F5539"
+      activeColor="#013C58"
       inactiveColor="#f0edf6"
       labeled={false}
       shifting={true}
@@ -31,7 +33,7 @@ const MainTabScreen = () => {
       <Tab.Screen name="Home" component={HomeStackScreen} 
         options={{
           tabBarLabel: 'Home',
-          tabBarColor: '#9EB7E5',
+          tabBarColor: myColor.tab,
           tabBarIcon: ({ color }) => (
             <Icon name="home" color={color} size={26} />
           ),
@@ -41,7 +43,7 @@ const MainTabScreen = () => {
       <Tab.Screen name="Settings" component={SettingScreen} 
         options={{
           tabBarLabel: 'Setting',
-          tabBarColor: '#648DE5',
+          tabBarColor: myColor.tab,
           tabBarIcon: ({ color }) => (
             <Icon name="cog" color={color} size={26} />
           ),

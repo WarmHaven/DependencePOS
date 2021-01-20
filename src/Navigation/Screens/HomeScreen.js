@@ -4,13 +4,13 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
   StatusBar,
   TouchableOpacity
 } from 'react-native';
-
+import { useTheme, } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { styles } from '../../style/css';
 import { DataContext } from '../../Components/Context';
 import MenuScroll from '../../Components/MenuScroll';
 import ViewProductAreafrom from '../../Components/ViewProductArea';
@@ -21,7 +21,8 @@ const HomeScreen = ({ navigation }) =>{
 
   const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
   // console.log(dataState);
-
+  const paperTheme = useTheme();
+  const { myColor } = paperTheme;
 
   const [state, setState] = React.useState({
     productType: null,
@@ -93,7 +94,7 @@ const HomeScreen = ({ navigation }) =>{
 
 
 	return(
-		<View style={[styles.container, styles.row]}>
+		<View style={[styles.container, styles.row, {backgroundColor: myColor.background}]}>
       
         <View style={styles.menuArea}>
           <MenuScroll auth={navigation} />
@@ -103,8 +104,8 @@ const HomeScreen = ({ navigation }) =>{
             <ViewProductAreafrom /> 
           </View>
           <View style={styles.cartContainer}>
-            <TouchableOpacity style={styles.cart} onPress={() => navigation.navigate('CartScreen')}>
-              <Icon name="cart" color={'#000'} size={40} />
+            <TouchableOpacity style={[styles.cart,{borderColor: myColor.line}]} onPress={() => navigation.navigate('CartScreen')}>
+              <Icon name="cart" color={myColor.line} size={40} />
               <Badge style={styles.badge} size={30}>{dataState.CART_LIST.length}</Badge>
             </TouchableOpacity>
           </View>  
@@ -114,42 +115,3 @@ const HomeScreen = ({ navigation }) =>{
 };
 
 export default HomeScreen;
-
-
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    backgroundColor: '#DDB892',
-  },
-  row: {
-    flexDirection:'row',
-  },
-  cart: {
-    padding: 10, 
-    borderColor:'#000', 
-    borderWidth: 4, 
-    borderRadius: 99,
-  },
-  badge:{ 
-    position: 'absolute',
-  },
-  menuArea:{
-    width: '20%',
-    // paddingHorizontal: 10,
-  },
-  mainArea:{
-    width: '80%',
-    height: '100%',
-    justifyContent: 'flex-end',
-    // alignItems: 'center',
-  },
-  cartContainer:{
-    alignSelf: 'flex-end', 
-    marginRight: 20, 
-    marginBottom: 20, 
-    position: 'absolute',
-    right: 5,
-    bottom: 5,
-  },
-
-});

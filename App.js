@@ -42,7 +42,12 @@ import { AuthContext, InfoContext, FunContext, DataContext, } from './src/Compon
 
 import { loginReducer, initialLoginState } from './src/Reducers/LoginReducer';
 import { dataReducer, initialDataState } from './src/Reducers/DataReducer';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
+import { lightColors, darkColors } from './src/style/CustomColor';
+
+import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
+import { ThemeProvider } from 'styled-components/native'
 
 const App: () => React$Node = () => {
 
@@ -57,9 +62,8 @@ const App: () => React$Node = () => {
     colors: {
       ...NavigationDefaultTheme.colors,
       ...PaperDefaultTheme.colors,
-      background: '#ffffff',
-      text: '#333333'
-    }
+    },
+    myColor: lightColors
   }
   
   const CustomDarkTheme = {
@@ -68,12 +72,12 @@ const App: () => React$Node = () => {
     colors: {
       ...NavigationDarkTheme.colors,
       ...PaperDarkTheme.colors,
-      background: '#333333',
-      text: '#ffffff'
-    }
+    },
+    myColor: darkColors
   }
 
-  const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+  const colorScheme = useColorScheme();
+  const theme = colorScheme==="dark" ? CustomDarkTheme : CustomDefaultTheme;
 
 
   const [loginState, loginDispatch] = React.useReducer(loginReducer, initialLoginState);
@@ -99,8 +103,6 @@ const App: () => React$Node = () => {
       loginDispatch({ type: 'LOGIN', id: userName, token: userToken });
     },
     signOut: async() => {
-      // setUserToken(null);
-      // setIsLoading(false);
       try {
         await AsyncStorage.removeItem('userToken');
         await AsyncStorage.removeItem('userName');
@@ -110,20 +112,20 @@ const App: () => React$Node = () => {
       loginDispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
     },
-    toggleTheme: () => {
-      setIsDarkTheme( isDarkTheme => !isDarkTheme );
+    toggleTheme: async() => {
+      try {
+        setIsDarkTheme( isDarkTheme => !isDarkTheme );
+      }catch(e){
+        console.log(e);
+      }
     },
     
   }), []);
-
   React.useEffect(() => {
     setTimeout(async() => {
       let userToken, userName;
-      userToken = null;
-      userName = null;
+      userToken=null; userName=null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
         userName = await AsyncStorage.getItem('userName');
@@ -132,7 +134,7 @@ const App: () => React$Node = () => {
       }
       // console.log('user token: ', userToken);
       loginDispatch({ type: 'RETRIEVE_TOKEN', id: userName, token: userToken });
-    }, 1000);
+    }, 1500);
   }, []);
 
 
@@ -145,32 +147,27 @@ const App: () => React$Node = () => {
     );
   }
   return (
-      <PaperProvider theme={theme}>
-      <FunContext.Provider value={funContext}>
-      <DataContext.Provider value={{dataState, dataDispatch, loginState, loginDispatch}}>
-      <NavigationContainer theme={theme}>
-        { loginState.userToken !== null ? (
-          <MainTabScreen />
-        )
-        :
-          <RootStackScreen/>
-        }
-        <Toast ref={(ref) => Toast.setRef(ref)} />
-      </NavigationContainer>
-      </DataContext.Provider>
-      </FunContext.Provider>
-      </PaperProvider>
+      <AppearanceProvider>
+        <PaperProvider theme={theme}>
+          <ThemeProvider theme={theme}>
+            <FunContext.Provider value={funContext}>
+              <DataContext.Provider value={{dataState, dataDispatch, loginState, loginDispatch}}>
+                <NavigationContainer theme={theme}>
+                  { loginState.userToken !== null ? (
+                    <MainTabScreen />
+                  )
+                  :
+                    <RootStackScreen/>
+                  }
+                  <Toast ref={(ref) => Toast.setRef(ref)} />
+                  <KeyboardSpacer/>
+                </NavigationContainer>
+              </DataContext.Provider>
+            </FunContext.Provider>
+          </ThemeProvider>
+        </PaperProvider>
+      </AppearanceProvider>
   );
 };
-
-const styles = StyleSheet.create({
-    container:{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#5b5b5b',
-
-    },
-});
 
 export default App;

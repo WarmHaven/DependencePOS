@@ -4,18 +4,22 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
+  // Text,
   StatusBar,
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { useTheme, Text, } from 'react-native-paper';
+import { styles } from '../style/css';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DataContext } from './Context';
 
 const MenuScroll = ({auth}) =>{
   const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
+  const paperTheme = useTheme();
+  const { myColor } = paperTheme;
 
   const [selectedId, setSelectedId] = useState('0');
   const [state, setState] = React.useState({
@@ -77,22 +81,22 @@ const MenuScroll = ({auth}) =>{
   }
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#7F5539" : "#B08968";
+    const backgroundColor = item.id === selectedId ? myColor.selected : myColor.button;
     return (
       <Item
         item={item}
         onPress={() => [setSelectedId(item.id), dataDispatch({type: 'SET_PRODUCT_TYPE', productType: item.id})]}
-        style={{ backgroundColor }}
+        style={{ backgroundColor, borderColor: myColor.line }}
       />
     );
   };
 
   if (state.userToken==null) {
     return(
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.MenuScrollContainer,{borderColor: myColor.line, backgroundColor: myColor.background}]}>
         <View style={styles.controlBar}>
           <TouchableOpacity onPress={()=>console.warn('click edit btn')}>
-            <Icon name="playlist-edit" color={'#000'} size={50} />
+            <Icon name="playlist-edit" color={myColor.line} size={50} />
           </TouchableOpacity>
         </View>
         <ActivityIndicator size="large"/>
@@ -101,10 +105,10 @@ const MenuScroll = ({auth}) =>{
     );
   }
   return(
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.MenuScrollContainer,{borderColor: myColor.line, backgroundColor: myColor.background}]}>
       <View style={styles.controlBar}>
-        <TouchableOpacity onPress={()=>auth.navigation.navigate('AddProdScreen')}>
-          <Icon name="playlist-edit" color={'#000'} size={50} />
+        <TouchableOpacity onPress={()=>auth.navigate('AddProdScreen')}>
+          <Icon name="playlist-edit" color={myColor.line} size={50} />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -120,43 +124,8 @@ const MenuScroll = ({auth}) =>{
 export default MenuScroll;
 
 
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    borderColor: '#000',
-    borderRightWidth: 2,
-    backgroundColor: '#DDB892',
-  },
-  item: {
-    backgroundColor: "#B08968",
-    padding: 20,
-    // paddingLeft: 40,     
-    alignItems: 'center',
-    borderColor: '#000',
-    borderBottomWidth: 2,
-    // marginVertical: 4,
-  },
-  header: {
-    fontSize: 36,
-    paddingHorizontal: 10,
-    backgroundColor: '#DDB892',
-    color: '#7F5539',
-  },
-  title: {
-    fontSize: 24,
-  },
-  controlBar: {
-    alignItems: 'flex-end'
-  }
-
-});
-
-
-
 const Item = ({ item, onPress, style }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
-    <Text style={styles.title}>{item.title}</Text>
+  <TouchableOpacity onPress={onPress} style={[styles.item, style, ]}>
+    <Text style={styles.menuText}>{item.title}</Text>
   </TouchableOpacity>
 );
