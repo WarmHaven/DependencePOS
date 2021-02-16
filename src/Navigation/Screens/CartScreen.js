@@ -15,12 +15,14 @@ import { styles } from '../../style/css';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
-import { DataContext } from '../../Components/Context';
+import { FunContext, DataContext } from '../../Components/Context';
 import CartListScroll from '../../Components/CartListScroll';
 
 const CartScreen = ({ navigation }) =>{
 
   const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
+  const { getUndoneOrder } = React.useContext(FunContext);
+
   const paperTheme = useTheme();
   const { myColor } = paperTheme;
 
@@ -41,7 +43,6 @@ const CartScreen = ({ navigation }) =>{
       }
       
   },[state.userToken]);
-
 
   function Cancel() {
     dataDispatch({type: 'REMOVE_ALL_CART_LIST'});
@@ -79,21 +80,25 @@ const CartScreen = ({ navigation }) =>{
                     
       }).then((response) => response.text())
             .then( async (jsonData) => {
-                console.warn("getProductType: "+jsonData);
+                // console.warn("InsertOrder: "+jsonData);
                 var allData = JSON.parse(jsonData);
-                console.log(allData);
+                // console.log(allData);
                 
-                if (allData.code != 0) {
-                  Alert.alert('結果',allData.result);
+                if (allData.code == 0) {
+                  dataDispatch({type:'REMOVE_ALL_CART_LIST'});
+                
+                  Alert.alert('結果',allData.result,
+                    [
+                      {text: 'Cancel', onPress: () => {getUndoneOrder(loginState.userToken); navigation.goBack(); } },
+                      {text: 'OK', onPress: ()=>  {getUndoneOrder(loginState.userToken); navigation.navigate('Order'); navigation.goBack(); } },
+                    ],
+                    { cancelable: false }
+                  );
+
+                  
                 }else{
                   Alert.alert('結果',allData.result);
                 }
-
-                // setState({
-                //   ...state,
-                //   productType: allData.result
-                // });
-
 
             }).catch((error) => {
               console.log(error);

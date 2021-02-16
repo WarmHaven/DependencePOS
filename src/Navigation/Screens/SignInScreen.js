@@ -102,8 +102,7 @@ const SignInScreen = ({navigation}) => {
           body: 
             "METHOD_NAME=loginCheck"+
             "&ACCOUNT="+userName+
-            "&PASSWD="+password+
-            "&apiKey="         
+            "&PASSWD="+password   
 
                   
                     

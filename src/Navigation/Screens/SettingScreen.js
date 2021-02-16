@@ -15,8 +15,7 @@ import { styles } from '../../style/css';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { FunContext, DataContext } from '../../Components/Context';
-import MenuScroll from '../../Components/MenuScroll';
-import ViewProductAreafrom from '../../Components/ViewProductArea';
+
 
 const SettingScreen = () =>{
 
@@ -47,10 +46,10 @@ const SettingScreen = () =>{
           <View style={styles.row}>
             <Caption style={styles.caption}>Administrator</Caption>
           </View>
-          <View style={styles.button}>
+          <View style={styles.SignOutbutton}>
             <TouchableOpacity
                 onPress={() => {signOut()}}
-                style={[styles.signIn, paperTheme.colors.card,{
+                style={[styles.signIn, {
                     backgroundColor: myColor.button,
                     borderColor: myColor.selected,
                     borderWidth: 1,
@@ -59,7 +58,7 @@ const SettingScreen = () =>{
             >
                 <Text style={[styles.title, ]}>Sign Out</Text>
             </TouchableOpacity>
-            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.2</Text>
+            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.3</Text>
           </View>
       
 

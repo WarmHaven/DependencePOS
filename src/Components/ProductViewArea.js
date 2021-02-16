@@ -60,7 +60,7 @@ const ProdButton = ({item, time}) => {
 			                    {item.NAME}
 			                </Text>
 			                <Text style={[ styles.buttonTextStyle, {textAlign: 'center'} ]}>
-			                    {item.unitPRICE}
+			                    ${item.unitPRICE==null? 0:item.unitPRICE}
 			                </Text>
 			            </View>
 			        </TouchableOpacity>
@@ -87,7 +87,7 @@ const ProdButton = ({item, time}) => {
 
 
 
-const ViewProductArea = (props) => {
+const ProductViewArea = (props) => {
 	const { dataState, dataDispatch } = React.useContext(DataContext);
 	const [state, setState] = React.useState({
 		data: null,
@@ -149,4 +149,4 @@ const ViewProductArea = (props) => {
 
 };
 
-export default ViewProductArea;
+export default ProductViewArea;

@@ -53,7 +53,6 @@ const App: () => React$Node = () => {
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null); 
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
 
   const CustomDefaultTheme = {
@@ -113,13 +112,64 @@ const App: () => React$Node = () => {
     },
     signUp: () => {
     },
-    toggleTheme: async() => {
-      try {
-        setIsDarkTheme( isDarkTheme => !isDarkTheme );
-      }catch(e){
-        console.log(e);
-      }
+    getRemarkType: (token) =>{
+        if(dataState.REMARK_TYPE_LIST == null){
+          fetch('http://127.0.0.1/Dependency/index.php', {
+              method: 'POST',
+              headers: {
+                  // 'Accept': 'application/x-www-form-urlencoded',
+                  'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: 
+                "METHOD_NAME=getRemarkType"+
+                "&apiKey="+token       
+
+          }).then((response) => response.text())
+                .then( async (jsonData) => {
+                    // console.warn("getRemarkType: "+jsonData);
+                    var allData = JSON.parse(jsonData);
+                    dataDispatch({type:'SET_REMARK_TYPE_LIST', remarkList: allData.result})
+
+
+                }).catch((error) => {
+                  console.log(error);
+                  // alert("網路異常，請重新整理！");
+                })
+        }
+        
     },
+
+    getUndoneOrder: (token)=>{
+        fetch('http://127.0.0.1/Dependency/index.php', {
+            method: 'POST',
+            headers: {
+                // 'Accept': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 
+              "METHOD_NAME=getUndoneOrder"+
+              "&apiKey="+token         
+
+                    
+                      
+        }).then((response) => response.text())
+              .then( async (jsonData) => {
+                  // console.warn("getUndoneOrder: "+jsonData);
+                  var allData = JSON.parse(jsonData);
+                  if (allData.code!=-1) {
+
+                    // console.log(allData.result[0].OrderMenu, allData.result[0].OrderItems,);
+
+                    dataDispatch({type:'SET_ORDER_MENU', orderMenuList:allData.result[0].OrderMenu});
+                    dataDispatch({type: 'SET_ORDER_MENU_TYPE', orderMenuType: allData.result[0].OrderMenu[0].OrderNo})
+                    dataDispatch({type:'SET_DEFAULT_ORDER_LIST', defaultOrderList:allData.result[0].OrderItems});
+                  }
+
+              }).catch((error) => {
+                console.log(error);
+                // alert("網路異常，請重新整理！");
+              })
+    }
     
   }), []);
   React.useEffect(() => {

@@ -21,19 +21,23 @@ require "./JWT/JWT.php";
 	$obj = new AllFunction();
 
 	$method_name = !empty($_POST['METHOD_NAME'])? $_POST['METHOD_NAME']:'null';
-	$account = !empty($_POST['ACCOUNT'])? $_POST['ACCOUNT']:'null';
-	$password = !empty($_POST['PASSWD'])? $_POST['PASSWD']:'null';
 	$token = !empty($_POST['apiKey'])? $_POST['apiKey']:'null';
 
-	$jwtResult = authJWT();
-	if ($jwtResult['code'] != 0) {
-		// print_r($jwtResult);
-		echo json_encode($jwtResult);
-		die();
+
+	if ($method_name != 'loginCheck') {
+		$jwtResult = authJWT();
+		if ($jwtResult['code'] != 0) {
+			// print_r($jwtResult);
+			echo json_encode($jwtResult);
+			die();
+		}
 	}
+	
 
 	switch ($method_name) {
 		case 'loginCheck':
+			$account = !empty($_POST['ACCOUNT'])? $_POST['ACCOUNT']:'null';
+			$password = !empty($_POST['PASSWD'])? $_POST['PASSWD']:'null';
 			$name = $obj-> loginCheck($account, $password);
 			// echo json_encode($result);
 			// echo json_encode($result) != 'null';
@@ -80,6 +84,80 @@ require "./JWT/JWT.php";
 			}
 			echo( json_encode($result));
 			break;
+		case 'getUndoneOrder':
+			$data = $obj-> getUndoneOrder();
+			$orderno = null;
+			
+			$orderMenuList = array();
+			$orderItemsList = array();
+			$outputList = array();
+			// print_r($data);count
+
+			if ($data != null) {
+				for ($i=0; $i < count($data); $i++) { 
+					if ($orderno != $data[$i]['OrderNO']) {
+						$orderno = $data[$i]['OrderNO'];
+						$newDate = $data[$i]['CreateDate'];
+						// $newDate = date("H:i:s", strtotime($newDate));
+
+						$temp = array('OrderNo' => $data[$i]['OrderNO'], 'TotalPrice' => $data[$i]['TotalPrice'], 'Count' => $data[$i]['Count'], 'Discount' => $data[$i]['Discount'], 'CreateDate' => $newDate);
+						$orderList = array();
+						$itemList = array();
+						array_push($orderList, $temp);
+						array_push($orderMenuList, $temp);
+					}
+
+					$temp = array('prodName' => $data[$i]['Name'], 'unitPrice' => $data[$i]['UnitPrice'], 'Quantity' => $data[$i]['Quantity'], 'Remark' => json_decode($data[$i]['Remark']), 'remark_plus' => $data[$i]['Remark_plus'], 'remark_minus' => $data[$i]['Remark_minus']);
+					array_push($itemList, $temp);
+					
+					if ( $i+1 != count($data) ) {
+						if ($data[$i]['OrderNO'] != $data[$i+1]['OrderNO']) {
+							array_push($orderItemsList, array("Main"=>$orderList, "Items"=>$itemList, ));
+						}
+					}else{
+						array_push($orderItemsList, array("Main"=>$orderList, "Items"=>$itemList, ));
+					}
+					
+				}
+
+				array_push($outputList, array("OrderMenu"=>$orderMenuList, "OrderItems"=>$orderItemsList, ));
+				// print_r(json_encode($outputList));
+				$result = array("code"=>1, "result"=>$outputList, );
+				echo( json_encode($result));
+
+			}else{
+				$result = array("code"=>-1, "result"=>"getUndoneOrder ERROR get data is null",);
+				echo( json_encode($result));
+			}	
+			break;
+		case 'doneOrder':
+			$orderNo = !empty($_POST['orderNo'])? $_POST['orderNo']:'null';
+			$result = array("code"=>0, "result"=>"完成訂單 成功");
+
+			if ($orderNo != '') {
+				//完成訂單
+				$doneOrderResult = $obj-> updateOrder($orderNo,2);
+				if ($doneOrderResult['code']==-1) {
+					$result = array("code"=>-1, "result"=>"完成訂單錯誤: ".$doneOrderResult['result']);
+					// break;
+				}
+			}
+			echo( json_encode($result));
+			break;
+		case 'cancelOrder':
+			$orderNo = !empty($_POST['orderNo'])? $_POST['orderNo']:'null';
+			$result = array("code"=>0, "result"=>"取消訂單 成功");
+
+			if ($orderNo != '') {
+				//取消訂單
+				$doneOrderResult = $obj-> updateOrder($orderNo,3);
+				if ($doneOrderResult['code']==-1) {
+					$result = array("code"=>-1, "result"=>"取消訂單錯誤: ".$doneOrderResult['result']);
+					// break;
+				}
+			}
+			echo( json_encode($result));
+			break;
 		case 'getProduct':
 			$type = !empty($_POST['TYPE'])? $_POST['TYPE']:0;
 			$product = new PRODUCT();
@@ -89,7 +167,7 @@ require "./JWT/JWT.php";
 			$productList = array();
 			if ($data != null) {
 				for ($i=0; $i < count($data); $i++) { 
-					$temp = array('ID' => $data[$i]['id'], 'NAME' => $data[$i]['Name'], 'unitPRICE' => $data[$i]['unitPrice'], 'color' => stateToColor($data[$i]['State']), 'TYPE'=>$data[$i]['Type']);
+					$temp = array('ID' => $data[$i]['ID'], 'NAME' => $data[$i]['Name'], 'unitPRICE' => $data[$i]['UnitPrice'], 'color' => stateToColor($data[$i]['State']), 'TYPE'=>$data[$i]['Type']);
 					array_push($productList, $temp);
 				}
 
@@ -106,7 +184,7 @@ require "./JWT/JWT.php";
 			$productList = array();
 			if ($data != null) {
 				for ($i=0; $i < count($data); $i++) { 
-					$temp = array('id' => $data[$i]['id'], 'title' => $data[$i]['Name']);
+					$temp = array('id' => $data[$i]['ID'], 'title' => $data[$i]['Name']);
 					array_push($productList, $temp);
 				}
 
@@ -124,7 +202,7 @@ require "./JWT/JWT.php";
 			$remarkList = array();
 			if ($data != null) {
 				for ($i=0; $i < count($data); $i++) { 
-					$temp = array('id' => $data[$i]['id'], 'title' => $data[$i]['Name']);
+					$temp = array('id' => $data[$i]['ID'], 'title' => $data[$i]['Name']);
 					array_push($remarkList, $temp);
 				}
 

@@ -14,6 +14,7 @@ import HomeScreen from './Screens/HomeScreen';
 import AddProdScreen from './Screens/AddProdScreen';
 import CartScreen from './Screens/CartScreen';
 import SettingScreen from './Screens/SettingScreen';
+import OrderScreen from './Screens/OrderScreen';
 
 
 import { DataContext } from '../Components/Context';
@@ -35,9 +36,18 @@ const MainTabScreen = () => {
           tabBarLabel: 'Home',
           tabBarColor: myColor.tab,
           tabBarIcon: ({ color }) => (
-            <Icon name="home" color={color} size={26} />
+            <Icon name="home" color={color} size={28} />
           ),
-          tabBarBadge: dataState.CART_LIST.length,
+        }} 
+      />
+      <Tab.Screen name="Order" component={OrderScreen} 
+        options={{
+          tabBarLabel: 'Order',
+          tabBarColor: myColor.tab,
+          tabBarIcon: ({ color }) => (
+            <Icon name="format-list-bulleted" color={color} size={30} />
+          ),
+          tabBarBadge: dataState.ORDER_MENU_LIST.length,
         }} 
       />
       <Tab.Screen name="Settings" component={SettingScreen} 

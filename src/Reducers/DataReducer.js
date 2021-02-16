@@ -15,9 +15,16 @@ export const initialDataState = {
   ORDER_PRICE: 0,
   DISCOUNT_VALUE: 0,
 
+  ORDER_LIST: [],
+  DEFAULT_ORDER_LIST: [],
+  CURRENT_ORDER: [],
+  ORDER_MENU_LIST: [],
+  ORDER_MENU_TYPE: null,
+
   //temp
   DISCOUNT: '',
   REMARK_TYPE_LIST: null,
+  CURRENT_ORDER_TOTALPRICE: 0,
 };
 
 
@@ -132,7 +139,6 @@ export const dataReducer = (prevState, action) => {
         };
         break;
       case 'SET_REMARK_PLUS': 
-
         var old3 = prevState.CART_LIST.findIndex(e => e.id==action.id);
         var found3 = prevState.CART_LIST.find((item) => item.id == action.id);
         found3.plus = action.value;
@@ -186,6 +192,32 @@ export const dataReducer = (prevState, action) => {
           DISCOUNT_VALUE : parseInt(discount),
         };
         break;
+      case 'SET_ORDER_MENU_TYPE': 
+        return {
+          ...prevState,
+          ORDER_MENU_TYPE: action.orderMenuType,
+        };
+        break;
+      case 'SET_ORDER_MENU': 
+        return {
+          ...prevState,
+          ORDER_MENU_LIST: action.orderMenuList,
+        };
+        break;
+      case 'SET_DEFAULT_ORDER_LIST': 
+        return {
+          ...prevState,
+          DEFAULT_ORDER_LIST: action.defaultOrderList,
+        };
+        break;
+      case 'SET_CURRENT_ORDER':
+        return{
+          ...prevState,
+          CURRENT_ORDER: action.currentOrder,
+          CURRENT_ORDER_TOTALPRICE: action.currentOrder[0]?(action.currentOrder[0].Main[0].TotalPrice - action.currentOrder[0].Main[0].Discount):0,
+        }
+        break;
+      
 
 
 

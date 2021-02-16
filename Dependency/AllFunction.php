@@ -32,7 +32,7 @@ class AllFunction{
 		$pdo = $pd->getConnection();
 
 
-		$sql = "SELECT * FROM USERINFO WHERE Account='".$account."' AND password='".$password."';";
+		$sql = "SELECT * FROM USERINFO WHERE Account='".$account."' AND Password='".$password."';";
 		$result = $pdo->prepare($sql);
 		$result->execute();
 		$count = $result->fetchColumn();
@@ -52,11 +52,11 @@ class AllFunction{
 			}
 
 			try {
-				$getID = $pdo->prepare("SELECT * FROM USERINFO WHERE Account='$account' AND password='$password'");
+				$getID = $pdo->prepare("SELECT * FROM USERINFO WHERE Account='$account' AND Password='$password'");
 				$getID->execute(array(md5(uniqid()), '中文', '中文'));
 				$result = $getID->fetch(PDO::FETCH_ASSOC);
 
-				$name = $result['name'];
+				$name = $result['Name'];
 
 			} catch (PDOException $e) {
 				echo "Error: " . $e->getMessage();
@@ -68,7 +68,7 @@ class AllFunction{
 			$date = date("Y-m-d H:i:s");
 			try {
 
-				$sql = "UPDATE USERINFO SET last_login='$date', ip='$ip'WHERE Account='$account' AND password='$password'";
+				$sql = "UPDATE USERINFO SET LastLogin='$date', IP='$ip'WHERE Account='$account' AND Password='$password'";
 
 				// Prepare statement
 				$stmt = $pdo->prepare($sql);
@@ -83,7 +83,7 @@ class AllFunction{
 
 			try {
 
-				$sql = "select used from USERINFO WHERE Account='$account';";
+				$sql = "SELECT Used FROM USERINFO WHERE Account='$account';";
 
 				// Prepare statement
 				$stmt = $pdo->prepare($sql);
@@ -93,7 +93,7 @@ class AllFunction{
 				// // echo a message to say the UPDATE succeeded
 				// echo $stmt->rowCount() . " records UPDATED successfully";
 				while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-					$used = $result['used'];
+					$used = $result['Used'];
 				}
 				// echo $used;
 			} catch (PDOException $e) {
@@ -220,6 +220,43 @@ class AllFunction{
 		}
 
         return $result;
+	}
+	function updateOrder($orderNo,$state){
+		global $pd;
+		$pdo = $pd->getConnection();
+		$updateSQL = "UPDATE ORDERS SET state=$state, UpdateDate=NOW() WHERE orderNo='$orderNo';";
+
+		try {
+			$stmt = $pdo->prepare($updateSQL);
+			$re = $stmt->execute();
+			$result = array("code"=>0, "result"=>"OK");
+		} catch (PDOException $e) {
+			$result = array("code"=>-1, "result"=>$e->getMessage());
+		}
+        return $result;
+	}
+	function getUndoneOrder(){
+
+		global $pd;
+		$pdo = $pd->getConnection();
+
+		$output = array();
+
+		$select = "SELECT * FROM view_undoneOrderList;";
+		
+		try {
+			$get = $pdo->prepare($select);
+			$get->execute(array(md5(uniqid()), '中文', '中文'));
+			$rows = $get->fetchAll(PDO::FETCH_ASSOC);
+
+			// print_r($rows);
+
+		} catch (PDOException $e) {
+			echo "Error: " . $e->getMessage();
+		}
+
+
+        return $rows;
 	}
 
 	function insertNewOrder_items($orderno,$itemList){

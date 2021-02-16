@@ -11,8 +11,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { DataContext } from '../../Components/Context';
-import MenuScroll from '../../Components/MenuScroll';
-import ViewProductAreafrom from '../../Components/ViewProductArea';
 import { Container, Title } from '../../style/CustomStyle';
 
 const AddProdScreen = () =>{

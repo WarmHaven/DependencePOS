@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DataContext } from './Context';
 
-const MenuScroll = ({auth}) =>{
+const ProductMenuArea = ({auth}) =>{
   const { dataState, dataDispatch, loginState, loginDispatch } = React.useContext(DataContext);
   const paperTheme = useTheme();
   const { myColor } = paperTheme;
@@ -121,7 +121,7 @@ const MenuScroll = ({auth}) =>{
   ) 
 };
 
-export default MenuScroll;
+export default ProductMenuArea;
 
 
 const Item = ({ item, onPress, style }) => (

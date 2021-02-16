@@ -38,12 +38,14 @@ export const styles = StyleSheet.create({
     position: 'absolute',
   },
   menuArea:{
-    width: '20%',
+    width: '21%',
   },
   mainArea:{
     width: '80%',
     height: '100%',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cartContainer:{
     alignSelf: 'flex-end', 
@@ -68,8 +70,12 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  menuDateText:{
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   controlBar: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   // ProductArea
   productAreaRow: {
@@ -90,7 +96,6 @@ export const styles = StyleSheet.create({
     marginHorizontal: 5
   },
   prodButton: {
-    backgroundColor:'gray',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: boxW,
@@ -111,6 +116,7 @@ export const styles = StyleSheet.create({
     height: SCROLL_HEIGHT,
     width: '100%',
     marginVertical: '5%',
+
   },
 
   //CartScreen
@@ -214,15 +220,79 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  
+
+  // Order Screen
+  orderContainer:{
+    marginHorizontal: 15
+  },
+  orderItemScroll: {
+    height: SCROLL_HEIGHT,
+    width: '100%',
+    marginVertical: '2%',
+
+  },
+  orderItemFoot:{
+    width:'95%', 
+    height:'12%',
+    justifyContent: 'space-between',
+    // marginBottom: '2%', 
+    borderTopWidth:3, 
+    padding: 20,
+  },
+  orderFootButtonArea:{
+    width:'95%', 
+    height:'8%',
+    justifyContent: 'space-between',
+    marginBottom: '1%', 
+    // borderTopWidth:3, 
+    // paddingHorizontal: 20,
+  },
+  orderButton:{
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: 70,
+    // marginLeft: wMargin, 
+    // marginBottom: hMargin,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginBottom: 10,
+
+  },
+  orderHeaderText:{
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
+  orderFootBtnText:{
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  orderFootButton:{
+    width: '15%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+
+  },
+  modalView: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 200,
+    // width: 400,
+    borderColor: '#000',
+    borderWidth: 2,
+    borderRadius: 20,
+    backgroundColor: '#f9f5ed',
+  },
 
 
 
-  //Setting Sereen
-  button: {
+
+  //Setting Screen
+  SignOutbutton: {
     alignItems: 'center',
     marginTop: 10,
-    width: '20%'
+    width: 200 
   },
   signIn: {
       width: '100%',

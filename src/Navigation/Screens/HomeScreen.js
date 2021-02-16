@@ -12,8 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { styles } from '../../style/css';
 import { DataContext } from '../../Components/Context';
-import MenuScroll from '../../Components/MenuScroll';
-import ViewProductAreafrom from '../../Components/ViewProductArea';
+import ProductMenuArea from '../../Components/ProductMenuArea';
+import ProductViewArea from '../../Components/ProductViewArea';
 import { IconButton, Badge } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
@@ -97,11 +97,11 @@ const HomeScreen = ({ navigation }) =>{
 		<View style={[styles.container, styles.row, {backgroundColor: myColor.background}]}>
       
         <View style={styles.menuArea}>
-          <MenuScroll auth={navigation} />
+          <ProductMenuArea auth={navigation} />
         </View>
         <View style={styles.mainArea}>
           <View style={{height:'100%'}}>
-            <ViewProductAreafrom /> 
+            <ProductViewArea /> 
           </View>
           <View style={styles.cartContainer}>
             <TouchableOpacity style={[styles.cart,{borderColor: myColor.line}]} onPress={() => navigation.navigate('CartScreen')}>

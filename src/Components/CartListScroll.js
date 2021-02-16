@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  // Text,
   StatusBar,
   TextInput,
   FlatList,
@@ -83,6 +82,7 @@ const CartListScroll = ({auth}) =>{
 
   const renderItem = ({ item, index }) => {
     const backgroundColor = myColor.button;
+    console.log(dataState.CART_LIST[index].minus);
     return (
 
       <Popover
@@ -110,9 +110,11 @@ const CartListScroll = ({auth}) =>{
           style={{backgroundColor: '#f9f5ed', fontSize: 30, borderTopLeftRadius: 20,borderTopRightRadius: 20,}}
           passiveColor={'#dadada'}
           keyboardType='number-pad'
+          maxLength={5}
           
+          value={dataState.CART_LIST[index].plus}
           defaultValue={dataState.CART_LIST[index].plus}
-          onChangeText={(e) => { dataDispatch({type:'SET_REMARK_PLUS', value:e, id:item.id}) }}
+          onChangeText={(e) => { dataDispatch({type:'SET_REMARK_PLUS', value:e.replace(/[^0-9]/g, ''), id:item.id}) }}
         />
 
         <Isao
@@ -126,9 +128,11 @@ const CartListScroll = ({auth}) =>{
           style={{backgroundColor: '#f9f5ed', fontSize: 30, }}
           passiveColor={'#dadada'}
           keyboardType='number-pad'
-          
+          maxLength={5}
+
+          value={dataState.CART_LIST[index].minus} 
           defaultValue={dataState.CART_LIST[index].minus}
-          onChangeText={(e) => { dataDispatch({type:'SET_REMARK_MINUS', value:e, id:item.id}) }}
+          onChangeText={(e) => { dataDispatch({type:'SET_REMARK_MINUS', value:e.replace(/[^0-9]/g, ''), id:item.id}) }}
         />
         <RemarkArea key={item.id} ID={item.id}  />
         </ScrollView>
@@ -176,7 +180,7 @@ const Item = ({ item, onPress, style }) => (
         <Text style={styles.CartListText}>{item.unitPrice}</Text>
       </View>
       <View style={styles.priceArea}>
-        <Text style={styles.CartListText}>{item.totalPrice+parseInt(item.plus==''? 0:item.plus)-parseInt(item.minus==''? 0:item.minus)}</Text>
+        <Text style={styles.CartListText}>${item.totalPrice+parseInt(item.plus==''? 0:item.plus)-parseInt(item.minus==''? 0:item.minus)}</Text>
       </View>
       <TouchableOpacity onPress={onPress} style={styles.deleteArea}>
         <Icon name="delete" color={'#000'} size={40} />
@@ -188,7 +192,7 @@ const Item = ({ item, onPress, style }) => (
 
 const FootArea = ({count, totalPrice, myColor}) => {
   const { dataState, dataDispatch } = React.useContext(DataContext);
-  console.log(dataState);
+  // console.log(dataState);
   const [discount1, setDiscount1] = React.useState(false);
   const [discount2, setDiscount2] = React.useState(false);
 
@@ -214,7 +218,7 @@ const FootArea = ({count, totalPrice, myColor}) => {
       </View>
 
       <View style={styles.totalPrice}>
-        <Text style={styles.CartListText}>{totalPrice-dataState.DISCOUNT_VALUE}</Text>
+        <Text style={styles.CartListText}>${totalPrice-dataState.DISCOUNT_VALUE}</Text>
       </View>
     </View>
   )
@@ -276,7 +280,8 @@ const DiscountBox = ({isOpen, value, dataDispatch, mode}) => {
           defaultValue={value}
           value={value} 
           editable={isOpen} 
-          textAlign={'center'} 
+          textAlign={'center'}
+          keyboardType='number-pad' 
           maxLength={mode==1? 2:5}
         />
       </View>
