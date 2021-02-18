@@ -58,7 +58,7 @@ const SettingScreen = () =>{
             >
                 <Text style={[styles.title, ]}>Sign Out</Text>
             </TouchableOpacity>
-            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.3</Text>
+            <Text style={{fontSize:20, fontWeight:'bold', marginTop:10}}>a1.0.4</Text>
           </View>
       
 

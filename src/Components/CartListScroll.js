@@ -82,7 +82,6 @@ const CartListScroll = ({auth}) =>{
 
   const renderItem = ({ item, index }) => {
     const backgroundColor = myColor.button;
-    console.log(dataState.CART_LIST[index].minus);
     return (
 
       <Popover
@@ -238,8 +237,8 @@ const Remark = ({item}) =>{
 
   return(
     <Text style={styles.remark}>
-      {item.plus? '+$'+item.plus+'、':null}
-      {item.minus? '-$'+item.minus+'、':null}
+      {item.plus!=0? '+$'+item.plus+'、':null}
+      {item.minus!=0? '-$'+item.minus+'、':null}
       {remark}
       
     </Text>

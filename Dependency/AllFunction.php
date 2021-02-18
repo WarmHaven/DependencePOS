@@ -141,18 +141,11 @@ class AllFunction{
             array_push($output, $value);
             
         }
-
-
         return $output;
-
-
 	}
 
 
 	function getProduct(){
-
-
-
 		global $pd;
 		$pdo = $pd->getConnection();
 
@@ -205,6 +198,38 @@ class AllFunction{
 
         return $result;
 	}
+	function mergeOrderMain($orderNo, $orderList){
+		$list = json_decode($orderList)[0];
+		global $pd;
+		$pdo = $pd->getConnection();
+		$updateSQL = "UPDATE ORDERS SET Count=$list->count, TotalPrice=$list->totalPrice, Discount=$list->discount, UpdateDate=NOW() WHERE OrderNo='$orderNo';";
+		try {
+			$stmt = $pdo->prepare($updateSQL);
+			$re = $stmt->execute();
+			$result = array("code"=>0, "result"=>"OK");
+		} catch (PDOException $e) {
+			$result = array("code"=>-1, "result"=>$e->getMessage());
+		}
+        return $result;
+	}
+	function mergeOrderItem($orderNo, $itemList){
+		// $list = json_decode($itemList)[0];
+		print_r($itemList);
+		// global $pd;
+		// $pdo = $pd->getConnection();
+		// $updateSQL = "UPDATE ORDERS SET Count=$list->count, TotalPrice=$list->totalPrice, Discount=$list->discount UpdateDate=NOW() WHERE orderNo='$orderNo';";
+
+		// // print_r($updateSQL);
+		// try {
+		// 	$stmt = $pdo->prepare($updateSQL);
+		// 	$re = $stmt->execute();
+		// 	$result = array("code"=>0, "result"=>"OK");
+		// } catch (PDOException $e) {
+		// 	$result = array("code"=>-1, "result"=>$e->getMessage());
+		// }
+  //       return $result;
+	}
+
 	function deleteOrder($orderNo){
 		global $pd;
 		$pdo = $pd->getConnection();
@@ -282,6 +307,23 @@ class AllFunction{
 		}
 
 		return $result;
+	}
+
+	function deleteOrder_Items($orderNo){
+		global $pd;
+		$pdo = $pd->getConnection();
+
+		$deleteSQL = "DELETE FROM ORDER_ITEMS WHERE orderNo='$orderNo';";
+
+
+		try {
+			$get = $pdo->exec($deleteSQL);
+			$result = array("code"=>0, "result"=>"OK");
+		} catch (PDOException $e) {
+			$result = array("code"=>-1, "result"=>$e->getMessage());
+		}
+
+        return $result;
 	}
 
 	function getProductType(){

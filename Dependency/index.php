@@ -107,7 +107,7 @@ require "./JWT/JWT.php";
 						array_push($orderMenuList, $temp);
 					}
 
-					$temp = array('prodName' => $data[$i]['Name'], 'unitPrice' => $data[$i]['UnitPrice'], 'Quantity' => $data[$i]['Quantity'], 'Remark' => json_decode($data[$i]['Remark']), 'remark_plus' => $data[$i]['Remark_plus'], 'remark_minus' => $data[$i]['Remark_minus']);
+					$temp = array('prodID' => $data[$i]['ProductID'], 'prodName' => $data[$i]['Name'], 'unitPrice' => $data[$i]['UnitPrice'], 'Quantity' => $data[$i]['Quantity'], 'Remark' => json_decode($data[$i]['Remark']), 'remark_plus' => $data[$i]['Remark_plus'], 'remark_minus' => $data[$i]['Remark_minus']);
 					array_push($itemList, $temp);
 					
 					if ( $i+1 != count($data) ) {
@@ -129,6 +129,45 @@ require "./JWT/JWT.php";
 				$result = array("code"=>-1, "result"=>"getUndoneOrder ERROR get data is null",);
 				echo( json_encode($result));
 			}	
+			break;
+		case 'mergeOrder':
+			$orderNo = !empty($_POST['orderNo'])? $_POST['orderNo']:'null';
+			$cartList = !empty($_POST['cartList'])? json_decode($_POST['cartList']):'null';
+			$orderList = !empty($_POST['orderList'])? $_POST['orderList']:'null';
+
+			$result = array("code"=>0, "result"=>"合併訂單 成功");
+
+			if ($orderNo != '') {
+				//完成訂單
+				$mainResult = $obj-> mergeOrderMain($orderNo, $orderList);
+				//確認合併訂單有無成功
+				if ($mainResult['code']==-1) {
+					$result = array("code"=>-1, "result"=>"合併訂單錯誤: ".$mainResult['result']);
+					// break;
+				}else{
+					$itemResult = $obj-> deleteOrder_Items($orderNo);
+
+					for ($i=0; $i < count($cartList) ; $i++) { 
+					
+						//新增明細
+						// $itemResult = $obj-> mergeOrderItem($orderNo, $cartList[$i]);
+						// if ($itemResult['code'] == -1) {
+						// 	$result = array("code"=>-1, "result"=>"新增明細錯誤: ".$itemResult['result']);
+						// 	//刪除 新訂單
+						// 	$obj->deleteOrder($createOrderResult['result']);
+						// 	break;
+						// }
+						$insertItemResult = $obj-> insertNewOrder_items($orderNo, $cartList[$i]);
+						if ($insertItemResult['code'] == -1) {
+							$result = array("code"=>-1, "result"=>"新增明細錯誤: ".$insertItemResult['result']);
+							//刪除 新訂單
+							// $obj->deleteOrder($createOrderResult['result']);
+							break;
+						}
+					}
+				}
+			}
+			echo( json_encode($result));
 			break;
 		case 'doneOrder':
 			$orderNo = !empty($_POST['orderNo'])? $_POST['orderNo']:'null';

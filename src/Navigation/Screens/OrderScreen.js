@@ -190,7 +190,7 @@ const OrderScreen = ({navigation}) =>{
       </View>
       <View style={[styles.mainArea, {paddingTop: 20}]}>
           <Text style={styles.orderHeaderText}>訂單號碼：{dataState.ORDER_MENU_TYPE}</Text>
-          <OrderViewArea  />
+          <OrderViewArea auth={navigation} />
           <View style={[styles.row, styles.orderItemFoot,{borderColor: myColor.line} ]}>
             <Text style={styles.orderHeaderText}>總計：</Text>
             <Text style={styles.orderHeaderText}>${dataState.CURRENT_ORDER_TOTALPRICE}</Text>

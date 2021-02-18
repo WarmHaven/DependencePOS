@@ -50,19 +50,22 @@ const CartScreen = ({ navigation }) =>{
   }
 
   function CreateOrder() {
-    // console.log(JSON.stringify(dataState.CART_LIST));
-    // console.log(dataState);
-
     const { ORDER_COUNT, ORDER_PRICE, DISCOUNT_VALUE } = dataState;
-
     var orderList = [];
     orderList.push({count: ORDER_COUNT, totalPrice: ORDER_PRICE, discount: DISCOUNT_VALUE});
-    // console.log(orderList);
 
-    InsertOrder(orderList);
+    _Insert(orderList);
   }
 
-  async function InsertOrder(orderList){
+  function MergeOrder(){
+    const { ORDER_COUNT, ORDER_PRICE, DISCOUNT_VALUE } = dataState;
+    var orderList = [];
+    orderList.push({count: ORDER_COUNT, totalPrice: ORDER_PRICE, discount: DISCOUNT_VALUE});
+    
+    _Merge(orderList);
+  }
+
+  async function _Insert(orderList){
     if (state.userToken != null) {  
       fetch('http://127.0.0.1/Dependency/index.php', {
           method: 'POST',
@@ -73,6 +76,55 @@ const CartScreen = ({ navigation }) =>{
           body: 
             "METHOD_NAME=insertOrder"+
             "&apiKey="+state.userToken+
+            "&cartList="+JSON.stringify(dataState.CART_LIST)+
+            "&orderList="+JSON.stringify(orderList)        
+
+                  
+                    
+      }).then((response) => response.text())
+            .then( async (jsonData) => {
+                // console.warn("InsertOrder: "+jsonData);
+                var allData = JSON.parse(jsonData);
+                // console.log(allData);
+                
+                if (allData.code == 0) {
+                  dataDispatch({type:'REMOVE_ALL_CART_LIST'});
+                
+                  Alert.alert('結果',allData.result,
+                    [
+                      {text: 'Cancel', onPress: () => {getUndoneOrder(loginState.userToken); navigation.goBack(); } },
+                      {text: 'OK', onPress: ()=>  {getUndoneOrder(loginState.userToken); navigation.navigate('Order'); navigation.goBack(); } },
+                    ],
+                    { cancelable: false }
+                  );
+
+                  
+                }else{
+                  Alert.alert('結果',allData.result);
+                }
+
+            }).catch((error) => {
+              console.log(error);
+              // alert("網路異常，請重新整理！");
+            })
+
+
+      
+    }
+  }
+
+  async function _Merge(orderList){
+    if (state.userToken != null) {  
+      fetch('http://127.0.0.1/Dependency/index.php', {
+          method: 'POST',
+          headers: {
+              // 'Accept': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 
+            "METHOD_NAME=mergeOrder"+
+            "&apiKey="+state.userToken+
+            "&orderNo="+dataState.MERGE_ORDERNO+
             "&cartList="+JSON.stringify(dataState.CART_LIST)+
             "&orderList="+JSON.stringify(orderList)        
 
@@ -130,16 +182,23 @@ const CartScreen = ({ navigation }) =>{
         <CartListScroll auth={navigation} />
       </View>
 
-      <View style={[styles.row, {width: '90%', height: '10%', marginTop:10}]}>
+      <View style={[styles.row, {width: '90%', height: '10%', marginTop:10, justifyContent: 'center', }]}>
         <TouchableOpacity onPress={()=> Cancel()} style={[styles.btnCancel, {backgroundColor: myColor.button2}]}>
           <Text style={styles.tableHeaderText}>取消訂單</Text>
         </TouchableOpacity>
         <TouchableOpacity 
+          disabled={true} 
+          onPress={()=> {}} 
+          style={[styles.btnConfirm, {backgroundColor: '#ADADAD'}]}
+        >
+          <Text style={styles.tableHeaderText}>{dataState.MERGE_ORDERNO}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
           disabled={dataState.CART_LIST.length==0? true:false} 
-          onPress={()=> CreateOrder()} 
+          onPress={()=> dataState.ORDER_MENU_TYPE===null? CreateOrder():MergeOrder() } 
           style={[styles.btnConfirm, {backgroundColor: dataState.CART_LIST.length==0? '#ADADAD':myColor.button2}]}
         >
-          <Text style={styles.tableHeaderText}>建立訂單</Text>
+          <Text style={styles.tableHeaderText}>{dataState.MERGE_ORDERNO===null?'建立訂單':'合併訂單'}</Text>
         </TouchableOpacity>
       </View>
 		</View>

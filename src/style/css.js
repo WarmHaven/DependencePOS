@@ -141,18 +141,20 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   btnCancel:{
-    width: '50%',
+    width: (100/3-1)+'%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
     borderRadius: 20,
+    marginHorizontal: 5,
   },
   btnConfirm:{
-    width: '50%',
+    width: (100/3-1)+'%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
     borderRadius: 20,
+    marginHorizontal: 5,
   },
   idArea:{
     width:'10%',

@@ -14,8 +14,9 @@ export const initialDataState = {
   ORDER_COUNT: 0,
   ORDER_PRICE: 0,
   DISCOUNT_VALUE: 0,
+  MERGE_ORDERNO: null,
 
-  ORDER_LIST: [],
+  // ORDER_LIST: [],
   DEFAULT_ORDER_LIST: [],
   CURRENT_ORDER: [],
   ORDER_MENU_LIST: [],
@@ -111,6 +112,7 @@ export const dataReducer = (prevState, action) => {
           CART_LIST: [...prevState.CART_LIST.slice(0,0)],
           ORDER_COUNT: 0,
           ORDER_PRICE: 0,
+          MERGE_ORDERNO: null
         };
         break;
       case 'SET_REMARK_TYPE_LIST': 
@@ -217,7 +219,30 @@ export const dataReducer = (prevState, action) => {
           CURRENT_ORDER_TOTALPRICE: action.currentOrder[0]?(action.currentOrder[0].Main[0].TotalPrice - action.currentOrder[0].Main[0].Discount):0,
         }
         break;
-      
+      case 'SET_MERGE_ORDERNO':
+        const orderList = prevState.CURRENT_ORDER[0].Items;
+        var tempList = [], finalList = [];
+        for (var i = 0; i < orderList.length; i++) {
+          tempList = {
+            id: orderList[i].prodID, 
+            name: orderList[i].prodName, 
+            unitPrice: orderList[i].unitPrice, 
+            count: parseInt(orderList[i].Quantity), 
+            remark: orderList[i].Remark,
+            plus: orderList[i].remark_plus,
+            minus: orderList[i].remark_minus,
+            totalPrice: orderList[i].Quantity * orderList[i].unitPrice
+          };
+          finalList.push(tempList);
+        }
+        var total = getTotal(finalList)[0];
+        return{
+          ...prevState,
+          MERGE_ORDERNO: action.mergeOrderno,
+          CART_LIST: finalList,
+          ORDER_COUNT: total.count,
+          ORDER_PRICE: total.price
+        }
 
 
 

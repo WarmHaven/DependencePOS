@@ -15,11 +15,10 @@ import Toast from 'react-native-toast-message';
 import { DataContext } from './Context';
 
 
-const OrderButton = ({item}) => {
+const OrderButton = ({item, navigation}) => {
 	const { dataState, dataDispatch } = React.useContext(DataContext);
 	const paperTheme = useTheme();
   	const { myColor } = paperTheme;
-	// console.log(item);
 
 	var time=0;
 	var AllBadge =  null || item.map( (item, index) => {
@@ -52,9 +51,15 @@ const OrderButton = ({item}) => {
 		
 	})
 
+
 	return(
 		<View>		
 			{AllBadge}
+			<View style={styles.container}>
+				<TouchableOpacity  onPress={ () => {dataDispatch({type: 'SET_MERGE_ORDERNO', mergeOrderno: dataState.ORDER_MENU_TYPE}); navigation.navigate('CartScreen'); } }>
+					<Icon name="plus-circle" color={'#000'} size={50} />
+				</TouchableOpacity>
+			</View>
 		</View>
 	)
 }
@@ -106,9 +111,8 @@ const DiscountButton = ({item}) => {
 }
 
 
-const OrderViewArea = (props) => {
+const OrderViewArea = ({auth}) => {
 	const { dataState, dataDispatch } = React.useContext(DataContext);
-	// console.log(dataState);
 	const [state, setState] = React.useState({
 		data: null,
 	});
@@ -132,7 +136,7 @@ const OrderViewArea = (props) => {
 	}else{
 		return(
 			<ScrollView style={styles.orderItemScroll}>
-				<OrderButton key={state.data.Main.OrderNo} item={state.data.Items} />
+				<OrderButton key={state.data.Main.OrderNo} item={state.data.Items} navigation={auth} />
 				<DiscountButton key={'D'+state.data.Main.OrderNo} item={state.data.Main} />
     		</ScrollView>
 		);
